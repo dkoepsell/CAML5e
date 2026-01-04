@@ -1,0 +1,7 @@
+id: rules.caml_5e_extended
+type: StateFact
+ruleset: dnd5e
+name: CAML-5e Rules Layer (extended demo)
+description: >
+  Demonstrates spell slots, prepared spells, immunities,
+  and multi-encounter gating.

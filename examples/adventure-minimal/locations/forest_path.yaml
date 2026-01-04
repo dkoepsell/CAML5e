@@ -1,0 +1,7 @@
+id: location.forest_path
+type: Location
+name: Forest Path
+description: A narrow trail through dark pines leading toward the ruined tower.
+connections:
+  - location.village_green
+  - location.ruined_tower

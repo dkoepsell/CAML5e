@@ -1,0 +1,42 @@
+@startuml
+skinparam backgroundColor #FFFFFF
+skinparam classAttributeIconSize 0
+
+package "CAML Core" {
+  class AdventureModule
+  class Scene
+  class Encounter
+  class Location
+  class Agent
+  class NPC
+  class PC
+  class Item
+  class Condition
+  class Outcome
+  class DispositionToOccur
+}
+
+package "CAML-5e Rules Layer" {
+  class AbilityScore
+  class Action
+  class Spell
+  class ConditionStatus
+  class ResourcePool
+}
+
+AdventureModule "1" o-- "*" Scene
+Scene "1" o-- "*" Encounter
+Encounter --> Location : occursAt
+Encounter --> Agent : involves
+Encounter --> Condition : gates
+Encounter --> Outcome : outcomes
+
+Agent <|-- NPC
+Agent <|-- PC
+
+Agent --> Action : hasAction
+Agent --> Spell : hasSpell
+Agent --> ResourcePool : hasResource
+Agent --> ConditionStatus : hasStatus
+
+@enduml

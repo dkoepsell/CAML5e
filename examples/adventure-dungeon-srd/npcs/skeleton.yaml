@@ -1,0 +1,17 @@
+id: npc.skeleton_guard
+type: NPC
+name: Skeleton Guard
+description: Animated bones bound to protect the sanctum.
+ruleset: dnd5e
+abilities: {str: 10, dex: 14, con: 15, int: 6, wis: 8, cha: 5}
+defenses:
+  ac: {value: 13}
+  hp: {max: 13}
+resistances: []
+immunities: [poison]
+actions:
+  - id: action.shortsword
+    name: Shortsword
+    activation: action
+    toHit: {bonus: 4}
+    damage: [{dice: "1d6+2", type: piercing}]

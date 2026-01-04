@@ -1,0 +1,70 @@
+{
+  "root": "/mnt/data/caml-5e-archive/examples/adventure-minimal",
+  "nodes": [
+    {
+      "id": "encounter.night_ambush",
+      "type": "encounter",
+      "label": "Night Ambush",
+      "meta": {
+        "path": "encounters/night_ambush.yaml"
+      }
+    },
+    {
+      "id": "fact:fact.time_of_day == 'night'",
+      "type": "requirement",
+      "label": "fact.time_of_day == 'night'",
+      "meta": {}
+    },
+    {
+      "id": "item:item.obsidian_key",
+      "type": "requirement",
+      "label": "item.obsidian_key",
+      "meta": {}
+    },
+    {
+      "id": "set:npc.bandit_captain.status = captured",
+      "type": "outcome",
+      "label": "npc.bandit_captain.status = captured",
+      "meta": {}
+    },
+    {
+      "id": "inc:faction.bandits.hostility by 1",
+      "type": "outcome",
+      "label": "faction.bandits.hostility by 1",
+      "meta": {}
+    },
+    {
+      "id": "transfer:{'item': 'item.obsidian_key', 'to': 'npc.bandit_captain'}",
+      "type": "outcome",
+      "label": "{'item': 'item.obsidian_key', 'to': 'npc.bandit_captain'}",
+      "meta": {}
+    }
+  ],
+  "links": [
+    {
+      "source": "fact:fact.time_of_day == 'night'",
+      "target": "encounter.night_ambush",
+      "type": "requires"
+    },
+    {
+      "source": "item:item.obsidian_key",
+      "target": "encounter.night_ambush",
+      "type": "requires"
+    },
+    {
+      "source": "encounter.night_ambush",
+      "target": "set:npc.bandit_captain.status = captured",
+      "type": "produces"
+    },
+    {
+      "source": "encounter.night_ambush",
+      "target": "inc:faction.bandits.hostility by 1",
+      "type": "produces"
+    },
+    {
+      "source": "encounter.night_ambush",
+      "target": "transfer:{'item': 'item.obsidian_key', 'to': 'npc.bandit_captain'}",
+      "type": "produces"
+    }
+  ]
+}

@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CAML Encounter + Gate Graph Viewer</title>
+  <style>
+    :root{
+      --bg:#0b0e14;
+      --panel:#111827;
+      --text:#e5e7eb;
+      --muted:#9ca3af;
+      --border:#243244;
+      --accent:#60a5fa;
+    }
+    html,body{height:100%; margin:0; background:var(--bg); color:var(--text); font-family:system-ui,Segoe UI,Roboto,Arial;}
+    header{display:flex; gap:10px; align-items:center; padding:10px 12px; border-bottom:1px solid var(--border); background:rgba(255,255,255,0.02);}
+    input,select,button{background:var(--panel); color:var(--text); border:1px solid var(--border); border-radius:8px; padding:8px 10px;}
+    button{cursor:pointer}
+    #wrap{display:grid; grid-template-columns: 1fr 340px; height: calc(100% - 52px);}
+    #canvas{width:100%; height:100%; display:block;}
+    aside{border-left:1px solid var(--border); padding:12px; overflow:auto; background:rgba(255,255,255,0.02);}
+    .muted{color:var(--muted)}
+    .pill{display:inline-block; padding:3px 8px; border:1px solid var(--border); border-radius:999px; margin-right:6px; margin-bottom:6px; font-size:12px;}
+    pre{white-space:pre-wrap; word-break:break-word; background:var(--panel); border:1px solid var(--border); border-radius:10px; padding:10px;}
+    a{color:var(--accent)}
+  </style>
+</head>
+<body>
+<header>
+  <strong>CAML Graph Viewer</strong>
+  <span class="muted">Encounter + Gate graph</span>
+  <input id="path" size="40" value="../examples/adventure-dungeon-srd/graph.json" />
+  <button id="load">Load</button>
+  <select id="filter">
+    <option value="all">Show all</option>
+    <option value="encounter">Encounters only</option>
+    <option value="encounter+req">Encounters + requirements</option>
+    <option value="encounter+out">Encounters + outcomes</option>
+  </select>
+  <span class="muted" style="margin-left:auto">Pan: drag • Zoom: wheel • Select: click</span>
+</header>
+
+<div id="wrap">
+  <canvas id="canvas"></canvas>
+  <aside>
+    <div id="summary" class="muted">Load a graph.json built via scripts/build_graph.py.</div>
+    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
+    <div id="details"></div>
+    <hr style="border:0; border-top:1px solid var(--border); margin:12px 0;">
+    <div class="muted">
+      Tip: From repo root:
+      <pre>python scripts/build_graph.py examples/adventure-dungeon-srd</pre>
+      Then open this file:
+      <pre>viewer/graph.html</pre>
+    </div>
+  </aside>
+</div>
+
+<script>
+const $ = (id)=>document.getElementById(id);
+
+let graph = null;
+let nodes = [];
+let links = [];
+let nodeById = new Map();
+
+const canvas = $("canvas");
+const ctx = canvas.getContext("2d");
+
+let W=0,H=0, dpr=1;
+function resize(){
+  dpr = window.devicePixelRatio || 1;
+  W = canvas.clientWidth;
+  H = canvas.clientHeight;
+  canvas.width = Math.floor(W*dpr);
+  canvas.height = Math.floor(H*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+new ResizeObserver(resize).observe(canvas);
+
+let panX=0, panY=0, zoom=1;
+let dragging=false, lastX=0, lastY=0;
+let selected=null;
+
+function colorForType(t){
+  if(t==="encounter") return "#60a5fa";
+  if(t==="requirement") return "#fbbf24";
+  if(t==="tag") return "#34d399";
+  if(t==="outcome") return "#a78bfa";
+  return "#9ca3af";
+}
+
+function applyFilter(mode){
+  if(!graph) return;
+  const keep = new Set();
+  if(mode==="all"){
+    graph.nodes.forEach(n=>keep.add(n.id));
+  }else if(mode==="encounter"){
+    graph.nodes.forEach(n=>{ if(n.type==="encounter") keep.add(n.id); });
+  }else if(mode==="encounter+req"){
+    graph.links.forEach(l=>{
+      const s = nodeById.get(l.source), t = nodeById.get(l.target);
+      if(s && t && (s.type==="requirement" || t.type==="requirement" || s.type==="encounter" || t.type==="encounter")){
+        if(s.type==="encounter" || t.type==="encounter" || s.type==="requirement" || t.type==="requirement"){
+          keep.add(l.source); keep.add(l.target);
+        }
+      }
+    });
+  }else if(mode==="encounter+out"){
+    graph.links.forEach(l=>{
+      const s = nodeById.get(l.source), t = nodeById.get(l.target);
+      if(s && t && (s.type==="tag" || s.type==="outcome" || t.type==="tag" || t.type==="outcome" || s.type==="encounter" || t.type==="encounter")){
+        if(s.type==="encounter" || t.type==="encounter"){
+          keep.add(l.source); keep.add(l.target);
+        }
+      }
+    });
+  }
+  nodes = graph.nodes.filter(n=>keep.has(n.id));
+  const keepIds = new Set(nodes.map(n=>n.id));
+  links = graph.links.filter(l=>keepIds.has(l.source) && keepIds.has(l.target));
+  // reinit positions
+  initLayout();
+}
+
+function initLayout(){
+  // simple force layout initialization
+  const centerX = W/2, centerY = H/2;
+  nodes.forEach((n,i)=>{
+    if(n.x==null){
+      const a = (i/nodes.length)*Math.PI*2;
+      n.x = centerX + Math.cos(a)*120;
+      n.y = centerY + Math.sin(a)*120;
+    }
+    n.vx = 0; n.vy = 0;
+  });
+}
+
+function step(){
+  if(!nodes.length) return;
+  // force params
+  const repulsion = 2400;
+  const spring = 0.02;
+  const linkDist = 90;
+  const damping = 0.85;
+
+  // repulsion
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length;j++){
+      const a=nodes[i], b=nodes[j];
+      const dx=a.x-b.x, dy=a.y-b.y;
+      const dist=Math.sqrt(dx*dx+dy*dy)+0.1;
+      const f=repulsion/(dist*dist);
+      const fx=f*dx/dist, fy=f*dy/dist;
+      a.vx += fx; a.vy += fy;
+      b.vx -= fx; b.vy -= fy;
+    }
+  }
+  // springs
+  links.forEach(l=>{
+    const s = nodeById.get(l.source);
+    const t = nodeById.get(l.target);
+    if(!s || !t) return;
+    if(!nodes.includes(s) || !nodes.includes(t)) return;
+    const dx=t.x-s.x, dy=t.y-s.y;
+    const dist=Math.sqrt(dx*dx+dy*dy)+0.1;
+    const diff=dist-linkDist;
+    const fx=spring*diff*dx/dist;
+    const fy=spring*diff*dy/dist;
+    s.vx += fx; s.vy += fy;
+    t.vx -= fx; t.vy -= fy;
+  });
+
+  // integrate
+  nodes.forEach(n=>{
+    n.vx *= damping; n.vy *= damping;
+    n.x += n.vx; n.y += n.vy;
+  });
+}
+
+function worldToScreen(x,y){
+  return {x: (x*zoom)+panX, y:(y*zoom)+panY};
+}
+function screenToWorld(x,y){
+  return {x: (x-panX)/zoom, y:(y-panY)/zoom};
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  // links
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.6;
+  links.forEach(l=>{
+    const s = nodeById.get(l.source);
+    const t = nodeById.get(l.target);
+    if(!s || !t) return;
+    if(!nodes.includes(s) || !nodes.includes(t)) return;
+    const a = worldToScreen(s.x,s.y), b = worldToScreen(t.x,t.y);
+    ctx.strokeStyle = "#243244";
+    ctx.beginPath();
+    ctx.moveTo(a.x,a.y);
+    ctx.lineTo(b.x,b.y);
+    ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+
+  // nodes
+  nodes.forEach(n=>{
+    const p = worldToScreen(n.x,n.y);
+    const r = (n.type==="encounter") ? 10 : 7;
+    ctx.fillStyle = colorForType(n.type);
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,r,0,Math.PI*2);
+    ctx.fill();
+
+    if(selected && selected.id===n.id){
+      ctx.strokeStyle="#e5e7eb";
+      ctx.lineWidth=2;
+      ctx.beginPath();
+      ctx.arc(p.x,p.y,r+3,0,Math.PI*2);
+      ctx.stroke();
+    }
+
+    // label
+    ctx.fillStyle = "#e5e7eb";
+    ctx.font = "12px system-ui";
+    ctx.fillText(n.label, p.x + r + 6, p.y + 4);
+  });
+}
+
+function tick(){
+  step();
+  draw();
+  requestAnimationFrame(tick);
+}
+requestAnimationFrame(tick);
+
+// interactions
+canvas.addEventListener("mousedown",(e)=>{
+  dragging=true; lastX=e.clientX; lastY=e.clientY;
+});
+window.addEventListener("mouseup",()=>dragging=false);
+window.addEventListener("mousemove",(e)=>{
+  if(!dragging) return;
+  panX += (e.clientX-lastX);
+  panY += (e.clientY-lastY);
+  lastX=e.clientX; lastY=e.clientY;
+});
+
+canvas.addEventListener("wheel",(e)=>{
+  e.preventDefault();
+  const mx=e.offsetX, my=e.offsetY;
+  const before = screenToWorld(mx,my);
+  const factor = Math.exp(-e.deltaY*0.001);
+  zoom = Math.max(0.1, Math.min(4, zoom*factor));
+  const after = screenToWorld(mx,my);
+  // keep point under cursor stable
+  panX += (after.x-before.x)*zoom;
+  panY += (after.y-before.y)*zoom;
+},{passive:false});
+
+canvas.addEventListener("click",(e)=>{
+  const w = screenToWorld(e.offsetX,e.offsetY);
+  let best=null, bestD=1e9;
+  nodes.forEach(n=>{
+    const dx=n.x-w.x, dy=n.y-w.y;
+    const d=dx*dx+dy*dy;
+    if(d<bestD){ bestD=d; best=n; }
+  });
+  if(best && bestD < 18*18){
+    selected = best;
+    showDetails(best.id);
+  }
+});
+
+function showDetails(id){
+  const n = nodeById.get(id);
+  if(!n) return;
+  const incoming = graph.links.filter(l=>l.target===id).map(l=>l.source);
+  const outgoing = graph.links.filter(l=>l.source===id).map(l=>l.target);
+
+  $("details").innerHTML = `
+    <div class="pill">${n.type}</div>
+    <h3 style="margin:10px 0 6px 0;">${escapeHtml(n.label)}</h3>
+    <div class="muted">ID: ${escapeHtml(n.id)}</div>
+    ${n.meta && n.meta.path ? `<div class="muted">Path: ${escapeHtml(n.meta.path)}</div>` : ""}
+    <h4 style="margin:12px 0 6px 0;">Incoming</h4>
+    <pre>${incoming.map(escapeHtml).join("\n") || "(none)"}</pre>
+    <h4 style="margin:12px 0 6px 0;">Outgoing</h4>
+    <pre>${outgoing.map(escapeHtml).join("\n") || "(none)"}</pre>
+  `;
+  $("summary").textContent = `${graph.nodes.length} nodes, ${graph.links.length} links loaded.`;
+}
+
+function escapeHtml(s){
+  return String(s).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;");
+}
+
+async function loadGraph(path){
+  const res = await fetch(path);
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  graph = await res.json();
+  nodeById = new Map(graph.nodes.map(n=>[n.id,n]));
+  panX = 20; panY = 20; zoom = 1;
+  applyFilter($("filter").value);
+  $("summary").textContent = `${graph.nodes.length} nodes, ${graph.links.length} links loaded.`;
+  $("details").innerHTML = "";
+  selected = null;
+}
+
+$("load").addEventListener("click",()=>{
+  loadGraph($("path").value).catch(err=>{
+    $("summary").textContent = "Failed to load: " + err.message;
+  });
+});
+$("filter").addEventListener("change",()=>applyFilter($("filter").value));
+
+// initial load attempt
+loadGraph($("path").value).catch(()=>{});
+</script>
+</body>
+</html>

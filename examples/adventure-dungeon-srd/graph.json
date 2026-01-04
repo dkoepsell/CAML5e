@@ -1,0 +1,72 @@
+{
+  "root": "/mnt/data/caml-5e-archive/examples/adventure-dungeon-srd",
+  "nodes": [
+    {
+      "id": "encounter.antechamber_dead",
+      "type": "encounter",
+      "label": "Antechamber Guardians",
+      "meta": {
+        "path": "encounters/antechamber_fight.yaml"
+      }
+    },
+    {
+      "id": "tag:area.cleared",
+      "type": "tag",
+      "label": "area.cleared",
+      "meta": {}
+    },
+    {
+      "id": "encounter.ritual_disruption",
+      "type": "encounter",
+      "label": "Disrupt the Ritual",
+      "meta": {
+        "path": "encounters/sanctum_boss.yaml"
+      }
+    },
+    {
+      "id": "set:ritual.status = stopped",
+      "type": "outcome",
+      "label": "ritual.status = stopped",
+      "meta": {}
+    },
+    {
+      "id": "tag:dungeon.completed",
+      "type": "tag",
+      "label": "dungeon.completed",
+      "meta": {}
+    },
+    {
+      "id": "set:ritual.status = completed",
+      "type": "outcome",
+      "label": "ritual.status = completed",
+      "meta": {}
+    }
+  ],
+  "links": [
+    {
+      "source": "encounter.antechamber_dead",
+      "target": "tag:area.cleared",
+      "type": "produces"
+    },
+    {
+      "source": "tag:area.cleared",
+      "target": "encounter.ritual_disruption",
+      "type": "requires"
+    },
+    {
+      "source": "encounter.ritual_disruption",
+      "target": "set:ritual.status = stopped",
+      "type": "produces"
+    },
+    {
+      "source": "encounter.ritual_disruption",
+      "target": "tag:dungeon.completed",
+      "type": "produces"
+    },
+    {
+      "source": "encounter.ritual_disruption",
+      "target": "set:ritual.status = completed",
+      "type": "produces"
+    }
+  ]
+}

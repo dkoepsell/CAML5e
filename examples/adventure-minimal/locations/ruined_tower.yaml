@@ -1,0 +1,5 @@
+id: location.ruined_tower
+type: Location
+name: Ruined Tower
+description: A broken watchtower with a sealed hatch that bears an obsidian keyhole.
+tags: [dungeon_entrance]

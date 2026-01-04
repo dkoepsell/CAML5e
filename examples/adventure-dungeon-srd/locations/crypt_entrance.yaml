@@ -1,0 +1,5 @@
+id: location.crypt_entrance
+type: Location
+name: Sunken Crypt Entrance
+description: A mossy stone stair descends into flood-dark ruins.
+connections: [location.antechamber]

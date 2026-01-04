@@ -1,0 +1,4 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+
+This repository recommends CC BY 4.0 for documentation and data packs.
+For the full legal code and deed, see the Creative Commons website.

@@ -1,0 +1,41 @@
+@prefix caml: <https://example.org/caml#> .
+@prefix dnd5e: <https://example.org/caml/dnd5e#> .
+@prefix bfo: <http://purl.obolibrary.org/obo/BFO_> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+
+caml:CAML-AdventureOntology a owl:Ontology ;
+  rdfs:label "CAML Adventure Ontology (BFO-aligned skeleton)" .
+
+### Core classes
+
+caml:AdventureModule a owl:Class ; rdfs:label "Adventure Module" .
+caml:Location a owl:Class ; rdfs:label "Location" .
+caml:Agent a owl:Class ; rdfs:label "Agent" .
+caml:NPC a owl:Class ; rdfs:subClassOf caml:Agent ; rdfs:label "NPC" .
+caml:PC a owl:Class ; rdfs:subClassOf caml:Agent ; rdfs:label "PC" .
+caml:Item a owl:Class ; rdfs:label "Item" .
+caml:Encounter a owl:Class ; rdfs:label "Encounter" .
+caml:Scene a owl:Class ; rdfs:label "Scene" .
+caml:Condition a owl:Class ; rdfs:label "Condition (Gate)" .
+caml:Outcome a owl:Class ; rdfs:label "Outcome" .
+caml:DispositionToOccur a owl:Class ; rdfs:label "Disposition to Occur" .
+
+### Core properties
+
+caml:occursAt a owl:ObjectProperty ; rdfs:domain caml:Encounter ; rdfs:range caml:Location ; rdfs:label "occurs at" .
+caml:involves a owl:ObjectProperty ; rdfs:domain caml:Encounter ; rdfs:range caml:Agent ; rdfs:label "involves" .
+caml:hasGate a owl:ObjectProperty ; rdfs:domain caml:Encounter ; rdfs:range caml:Condition ; rdfs:label "has gate" .
+caml:hasOutcome a owl:ObjectProperty ; rdfs:domain caml:Encounter ; rdfs:range caml:Outcome ; rdfs:label "has outcome" .
+caml:connectedTo a owl:ObjectProperty ; rdfs:domain caml:Location ; rdfs:range caml:Location ; rdfs:label "connected to" .
+
+### 5e layer classes (structured, not prose)
+
+dnd5e:AbilityScore a owl:Class ; rdfs:label "Ability Score" .
+dnd5e:Action a owl:Class ; rdfs:label "Action" .
+dnd5e:Spell a owl:Class ; rdfs:label "Spell" .
+dnd5e:ConditionStatus a owl:Class ; rdfs:label "Condition Status" .
+dnd5e:ResourcePool a owl:Class ; rdfs:label "Resource Pool" .
+
+dnd5e:hasAction a owl:ObjectProperty ; rdfs:domain caml:Agent ; rdfs:range dnd5e:Action ; rdfs:label "has action" .
+dnd5e:hasSpell a owl:ObjectProperty ; rdfs:domain caml:Agent ; rdfs:range dnd5e:Spell ; rdfs:label "has spell" .

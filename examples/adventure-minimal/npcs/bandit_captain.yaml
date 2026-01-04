@@ -1,0 +1,16 @@
+id: npc.bandit_captain
+type: NPC
+name: Bandit Captain
+description: A pragmatic outlaw who wants the key more than bloodshed.
+faction: faction.bandits
+ruleset: dnd5e
+abilities: {str: 15, dex: 14, con: 14, int: 11, wis: 12, cha: 14}
+defenses:
+  ac: {value: 15}
+  hp: {max: 65}
+actions:
+  - id: action.scimitar
+    name: Scimitar
+    activation: action
+    toHit: {bonus: 4}
+    damage: [{dice: "1d6+2", type: slashing}]

@@ -1,0 +1,6 @@
+id: npc.eldrin_quiet
+type: NPC
+name: Eldrin the Quiet
+description: The village elder who quietly tests strangers.
+roles: [village_elder]
+faction: faction.village

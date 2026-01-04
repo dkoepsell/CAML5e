@@ -1,0 +1,6 @@
+id: location.village_green
+type: Location
+name: Village Green
+description: A central meeting spot with an old stone well and a notice board.
+connections:
+  - location.forest_path

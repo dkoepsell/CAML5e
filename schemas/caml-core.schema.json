@@ -1,0 +1,210 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml/schemas/caml-core.schema.json",
+  "title": "CAML Core Schema",
+  "type": "object",
+  "required": [
+    "id",
+    "type"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_.-]+$"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "AdventureModule",
+        "Location",
+        "NPC",
+        "Item",
+        "Encounter",
+        "Quest",
+        "Faction",
+        "Handout",
+        "StateFact"
+      ]
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "links": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "ruleset": {
+      "type": "string"
+    },
+    "occursAt": {
+      "type": "string"
+    },
+    "participants": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "gates": {
+      "type": "object",
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gateExpr"
+          }
+        },
+        "any": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/gateExpr"
+          }
+        },
+        "not": {
+          "$ref": "#/definitions/gateExpr"
+        }
+      },
+      "additionalProperties": false
+    },
+    "outcomes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": {
+          "$ref": "#/definitions/outcomeStep"
+        }
+      }
+    }
+  },
+  "additionalProperties": true,
+  "definitions": {
+    "gateExpr": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object",
+          "required": [
+            "fact",
+            "op",
+            "value"
+          ],
+          "properties": {
+            "fact": {
+              "type": "string"
+            },
+            "op": {
+              "type": "string",
+              "enum": [
+                "==",
+                "!=",
+                "<",
+                ">",
+                "<=",
+                ">=",
+                "in",
+                "contains"
+              ]
+            },
+            "value": {}
+          },
+          "additionalProperties": false
+        }
+      ]
+    },
+    "outcomeStep": {
+      "oneOf": [
+        {
+          "type": "object",
+          "required": [
+            "set"
+          ],
+          "properties": {
+            "set": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "inc"
+          ],
+          "properties": {
+            "inc": {
+              "type": "string"
+            },
+            "by": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "dec"
+          ],
+          "properties": {
+            "dec": {
+              "type": "string"
+            },
+            "by": {
+              "type": "number"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "addTag"
+          ],
+          "properties": {
+            "addTag": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "removeTag"
+          ],
+          "properties": {
+            "removeTag": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "required": [
+            "transfer"
+          ],
+          "properties": {
+            "transfer": {
+              "type": "object"
+            }
+          },
+          "additionalProperties": false
+        }
+      ]
+    }
+  }
+}

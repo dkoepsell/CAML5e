@@ -1,0 +1,5 @@
+id: location.inner_sanctum
+type: Location
+name: Inner Sanctum
+description: A circular chamber with a cracked altar.
+tags: [boss_room, ritual_site]

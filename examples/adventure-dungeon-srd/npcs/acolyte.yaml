@@ -1,0 +1,19 @@
+id: npc.dark_acolyte
+type: NPC
+name: Dark Acolyte
+description: A fanatic channeling forbidden rites.
+ruleset: dnd5e
+abilities: {str: 10, dex: 12, con: 13, int: 11, wis: 14, cha: 12}
+defenses:
+  ac: {value: 12}
+  hp: {max: 27}
+spellcasting:
+  ability: wis
+  slots: {1: 2}
+  spellsPrepared: [spell.cure_wounds, spell.inflict_wounds]
+actions:
+  - id: action.mace
+    name: Mace
+    activation: action
+    toHit: {bonus: 3}
+    damage: [{dice: "1d6+1", type: bludgeoning}]

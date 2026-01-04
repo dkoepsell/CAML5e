@@ -1,0 +1,18 @@
+id: encounter.night_ambush
+type: Encounter
+name: Night Ambush
+occursAt: location.forest_path
+participants: [npc.bandit_captain]
+gates:
+  all:
+    - {fact: fact.time_of_day, op: "==", value: "night"}
+    - "party.has(item.obsidian_key)"
+outcomes:
+  success:
+    - set: "npc.bandit_captain.status = captured"
+    - inc: "faction.bandits.hostility"
+      by: 1
+  failure:
+    - transfer:
+        item: item.obsidian_key
+        to: npc.bandit_captain

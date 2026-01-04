@@ -1,0 +1,8 @@
+id: encounter.antechamber_dead
+type: Encounter
+name: Antechamber Guardians
+occursAt: location.antechamber
+participants: [npc.skeleton_guard]
+outcomes:
+  success:
+    - addTag: area.cleared

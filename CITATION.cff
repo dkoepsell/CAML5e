@@ -1,0 +1,16 @@
+cff-version: 1.2.0
+message: "If you use this schema/ontology in academic work, please cite it as below."
+title: "CAML-5e: Canonical Adventure Markup Language (Core + D&D 5e Layer)"
+authors:
+  - family-names: "Koepsell"
+    given-names: "David R."
+license: "Apache-2.0"
+date-released: "2026-01-04"
+preferred-citation:
+  type: software
+  authors:
+    - family-names: "Koepsell"
+      given-names: "David R."
+  title: "CAML-5e: Canonical Adventure Markup Language (Core + D&D 5e Layer)"
+  year: 2026
+  version: "0.1.0"

@@ -1,0 +1,14 @@
+id: encounter.ritual_disruption
+type: Encounter
+name: Disrupt the Ritual
+occursAt: location.inner_sanctum
+participants: [npc.dark_acolyte]
+gates:
+  all:
+    - "area.cleared"
+outcomes:
+  success:
+    - set: "ritual.status = stopped"
+    - addTag: dungeon.completed
+  failure:
+    - set: "ritual.status = completed"

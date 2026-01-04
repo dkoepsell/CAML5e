@@ -1,0 +1,7 @@
+id: rules.caml_5e
+type: StateFact
+ruleset: dnd5e
+name: CAML-5e Rules Layer (minimal)
+description: >
+  This example includes the minimum mechanics fields used by the demo adventure.
+  Expand using schemas/caml-5e.schema.json.

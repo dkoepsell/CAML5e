@@ -1,0 +1,8 @@
+id: module.sunken_crypt
+type: AdventureModule
+name: The Sunken Crypt
+description: >
+  A compact SRD-safe dungeon demonstrating spellcasting, conditions,
+  rests, multi-encounter branching, and resource pressure.
+tags: [dungeon, srd, demo]
+entryScene: scene.crypt_entrance

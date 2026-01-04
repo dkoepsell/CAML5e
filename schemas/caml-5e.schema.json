@@ -1,0 +1,93 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml/schemas/caml-5e.schema.json",
+  "title": "CAML-5e Rules Layer Schema",
+  "type": "object",
+  "required": [
+    "id",
+    "type",
+    "ruleset"
+  ],
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "NPC",
+        "PC",
+        "Item",
+        "Spell",
+        "Condition",
+        "ClassFeature",
+        "MonsterFeature"
+      ]
+    },
+    "ruleset": {
+      "type": "string",
+      "const": "dnd5e"
+    },
+    "statblock": {
+      "type": "object"
+    },
+    "abilities": {
+      "type": "object",
+      "properties": {
+        "str": {
+          "type": "integer"
+        },
+        "dex": {
+          "type": "integer"
+        },
+        "con": {
+          "type": "integer"
+        },
+        "int": {
+          "type": "integer"
+        },
+        "wis": {
+          "type": "integer"
+        },
+        "cha": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "proficiency": {
+      "type": "object"
+    },
+    "defenses": {
+      "type": "object"
+    },
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "bonusActions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "reactions": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "spellcasting": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "resources": {
+      "type": "object"
+    }
+  },
+  "additionalProperties": true
+}

@@ -1,0 +1,6 @@
+id: location.antechamber
+type: Location
+name: Antechamber
+description: Broken sarcophagi and knee-deep water.
+connections: [location.crypt_entrance, location.inner_sanctum]
+tags: [difficult_terrain]

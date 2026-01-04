@@ -1,0 +1,5 @@
+id: item.potion_healing
+type: Item
+name: Potion of Healing
+description: Restores 2d4+2 hit points when consumed.
+ruleset: dnd5e

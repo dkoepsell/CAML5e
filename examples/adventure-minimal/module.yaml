@@ -1,0 +1,8 @@
+id: module.obsidian_key
+type: AdventureModule
+name: The Obsidian Key
+description: >
+  A minimal CAML-5e example. The party finds a key, gets ambushed, and chooses between negotiation
+  and a tower approach. Branching is expressed via gates and outcomes.
+tags: [demo, minimal]
+entryScene: scene.village_intro
