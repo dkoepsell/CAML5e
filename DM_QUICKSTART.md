@@ -1,4 +1,4 @@
-# CAML-5e: DM Quick Start (1 Page)
+# CAML-5e: DM Quick Start
 
 **What this is:**  
 CAML-5e is a way to prep and run D&D adventures as **structured possibilities**, not scripts.  
