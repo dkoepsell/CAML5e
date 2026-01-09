@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/process_inputs.schema.json",
+  "title": "CAML 2.0 Process Inputs",
+  "type": "object",
+  "$defs": {
+    "process_input": {
+      "type": "object",
+      "required": [
+        "actor",
+        "declared_action"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "actor": {
+          "$ref": "./defs.schema.json#/$defs/ref"
+        },
+        "declared_action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "target": {
+          "$ref": "./defs.schema.json#/$defs/ref"
+        },
+        "method": {
+          "type": "string"
+        },
+        "intent": {
+          "type": "string"
+        },
+        "freeform": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

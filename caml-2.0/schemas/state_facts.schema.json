@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/state_facts.schema.json",
+  "title": "CAML 2.0 State Facts",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "$ref": "./defs.schema.json#/$defs/id"
+    },
+    "ref": {
+      "$ref": "./defs.schema.json#/$defs/ref"
+    },
+    "state_fact": {
+      "type": "object",
+      "required": [
+        "id",
+        "bearer",
+        "type",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "bearer": {
+          "$ref": "#/$defs/ref"
+        },
+        "type": {
+          "type": "string",
+          "minLength": 1
+        },
+        "value": {},
+        "units": {
+          "type": "string"
+        },
+        "validity": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "since_snapshot": {
+              "$ref": "#/$defs/ref"
+            },
+            "until_snapshot": {
+              "$ref": "#/$defs/ref"
+            }
+          }
+        },
+        "provenance": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "asserted_by": {
+              "type": "string"
+            },
+            "source_process": {
+              "$ref": "#/$defs/ref"
+            }
+          }
+        }
+      }
+    }
+  }
+}

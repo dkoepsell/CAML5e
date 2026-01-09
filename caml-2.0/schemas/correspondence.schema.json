@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/correspondence.schema.json",
+  "title": "CAML 2.0 Correspondence Mode",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "cadence": {
+      "type": "string",
+      "enum": [
+        "daily",
+        "weekly",
+        "phase",
+        "ad_hoc"
+      ]
+    },
+    "default_timebox_hours": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 720
+    },
+    "turns": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "timebox",
+          "submissions"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "$ref": "./defs.schema.json#/$defs/id"
+          },
+          "timebox": {
+            "$ref": "./defs.schema.json#/$defs/timebox"
+          },
+          "submissions": {
+            "type": "array",
+            "items": {
+              "$ref": "./process_inputs.schema.json#/$defs/process_input"
+            }
+          }
+        }
+      }
+    }
+  }
+}

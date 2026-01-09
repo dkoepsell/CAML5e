@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/transition_ops.schema.json",
+  "title": "CAML 2.0 Transition Operations",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "$ref": "./defs.schema.json#/$defs/id"
+    },
+    "ref": {
+      "$ref": "./defs.schema.json#/$defs/ref"
+    },
+    "transition": {
+      "type": "object",
+      "required": [
+        "id",
+        "caused_by",
+        "ops"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "caused_by": {
+          "$ref": "#/$defs/ref"
+        },
+        "ops": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/op"
+          }
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
+    "op": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/add_state"
+        },
+        {
+          "$ref": "#/$defs/update_state"
+        },
+        {
+          "$ref": "#/$defs/remove_state"
+        },
+        {
+          "$ref": "#/$defs/grant_role"
+        },
+        {
+          "$ref": "#/$defs/revoke_role"
+        },
+        {
+          "$ref": "#/$defs/move_entity"
+        },
+        {
+          "$ref": "#/$defs/create_entity"
+        },
+        {
+          "$ref": "#/$defs/retire_entity"
+        }
+      ]
+    },
+    "add_state": {
+      "type": "object",
+      "required": [
+        "op",
+        "fact"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "add_state"
+        },
+        "fact": {
+          "$ref": "./state_facts.schema.json#/$defs/state_fact"
+        }
+      }
+    },
+    "update_state": {
+      "type": "object",
+      "required": [
+        "op",
+        "state_id",
+        "value"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "update_state"
+        },
+        "state_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "value": {}
+      }
+    },
+    "remove_state": {
+      "type": "object",
+      "required": [
+        "op",
+        "state_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "remove_state"
+        },
+        "state_id": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "grant_role": {
+      "type": "object",
+      "required": [
+        "op",
+        "assignment"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "grant_role"
+        },
+        "assignment": {
+          "$ref": "./roles_assignments.schema.json#/$defs/role_assignment"
+        }
+      }
+    },
+    "revoke_role": {
+      "type": "object",
+      "required": [
+        "op",
+        "role_assignment_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "revoke_role"
+        },
+        "role_assignment_id": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "move_entity": {
+      "type": "object",
+      "required": [
+        "op",
+        "entity",
+        "to_location"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "move_entity"
+        },
+        "entity": {
+          "$ref": "#/$defs/ref"
+        },
+        "to_location": {
+          "$ref": "#/$defs/ref"
+        }
+      }
+    },
+    "create_entity": {
+      "type": "object",
+      "required": [
+        "op",
+        "entity"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "create_entity"
+        },
+        "entity": {
+          "oneOf": [
+            {
+              "$ref": "./world_entities.schema.json#/$defs/character"
+            },
+            {
+              "$ref": "./world_entities.schema.json#/$defs/location"
+            },
+            {
+              "$ref": "./world_entities.schema.json#/$defs/item"
+            },
+            {
+              "$ref": "./world_entities.schema.json#/$defs/faction"
+            }
+          ]
+        }
+      }
+    },
+    "retire_entity": {
+      "type": "object",
+      "required": [
+        "op",
+        "entity_id",
+        "reason"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "op": {
+          "const": "retire_entity"
+        },
+        "entity_id": {
+          "$ref": "#/$defs/ref"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/transitions.schema.json",
+  "title": "CAML 2.0 Transition Layer (Process Boundaries)",
+  "type": "object",
+  "required": [
+    "changes"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "changes": {
+      "type": "array",
+      "items": {
+        "$ref": "./transition_ops.schema.json#/$defs/transition"
+      }
+    }
+  }
+}

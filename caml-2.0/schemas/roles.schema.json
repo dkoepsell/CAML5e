@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/roles.schema.json",
+  "title": "CAML 2.0 Roles Layer",
+  "type": "object",
+  "required": [
+    "assignments"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "assignments": {
+      "type": "array",
+      "items": {
+        "$ref": "./roles_assignments.schema.json#/$defs/role_assignment"
+      }
+    }
+  }
+}

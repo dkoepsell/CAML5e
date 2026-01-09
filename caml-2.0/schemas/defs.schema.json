@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/defs.schema.json",
+  "title": "CAML 2.0 Shared Definitions",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_\\-:.]{0,127}$"
+    },
+    "ref": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_\\-:.]{0,127}$"
+    },
+    "iso_datetime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "timebox": {
+      "type": "object",
+      "required": [
+        "id",
+        "start_utc",
+        "end_utc"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "start_utc": {
+          "$ref": "#/$defs/iso_datetime"
+        },
+        "end_utc": {
+          "$ref": "#/$defs/iso_datetime"
+        },
+        "label": {
+          "type": "string"
+        }
+      }
+    },
+    "operator": {
+      "type": "string",
+      "enum": [
+        "==",
+        "!=",
+        "<",
+        "<=",
+        ">",
+        ">=",
+        "in",
+        "contains",
+        "exists",
+        "not_exists"
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "required": [
+        "lhs",
+        "op"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lhs": {
+          "type": "string",
+          "minLength": 1
+        },
+        "op": {
+          "$ref": "#/$defs/operator"
+        },
+        "rhs": {}
+      }
+    },
+    "condition_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "all": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/condition"
+          }
+        },
+        "any": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/condition"
+          }
+        },
+        "none": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/condition"
+          }
+        }
+      }
+    }
+  }
+}

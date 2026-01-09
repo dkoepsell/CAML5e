@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/world.schema.json",
+  "title": "CAML 2.0 World Structure",
+  "type": "object",
+  "required": [
+    "entities"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "entities": {
+      "type": "object",
+      "required": [
+        "characters",
+        "locations",
+        "items",
+        "factions"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "characters": {
+          "type": "array",
+          "items": {
+            "$ref": "./world_entities.schema.json#/$defs/character"
+          }
+        },
+        "locations": {
+          "type": "array",
+          "items": {
+            "$ref": "./world_entities.schema.json#/$defs/location"
+          }
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "./world_entities.schema.json#/$defs/item"
+          }
+        },
+        "factions": {
+          "type": "array",
+          "items": {
+            "$ref": "./world_entities.schema.json#/$defs/faction"
+          }
+        }
+      }
+    },
+    "connections": {
+      "type": "array",
+      "items": {
+        "$ref": "./world_entities.schema.json#/$defs/connection"
+      }
+    }
+  }
+}

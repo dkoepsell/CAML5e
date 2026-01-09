@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/caml2.schema.json",
+  "title": "CAML 2.0 Root Document",
+  "type": "object",
+  "required": [
+    "caml_version",
+    "meta",
+    "world",
+    "state",
+    "roles",
+    "processes",
+    "transitions",
+    "snapshots"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "caml_version": {
+      "type": "string",
+      "const": "2.0"
+    },
+    "meta": {
+      "$ref": "./meta.schema.json"
+    },
+    "world": {
+      "$ref": "./world.schema.json"
+    },
+    "state": {
+      "$ref": "./state.schema.json"
+    },
+    "roles": {
+      "$ref": "./roles.schema.json"
+    },
+    "processes": {
+      "$ref": "./processes.schema.json"
+    },
+    "transitions": {
+      "$ref": "./transitions.schema.json"
+    },
+    "snapshots": {
+      "$ref": "./snapshots.schema.json"
+    },
+    "correspondence": {
+      "$ref": "./correspondence.schema.json"
+    }
+  }
+}

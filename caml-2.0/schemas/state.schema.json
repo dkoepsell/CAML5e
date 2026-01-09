@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/state.schema.json",
+  "title": "CAML 2.0 State Layer (Dependent Continuants)",
+  "type": "object",
+  "required": [
+    "facts"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "facts": {
+      "type": "array",
+      "items": {
+        "$ref": "./state_facts.schema.json#/$defs/state_fact"
+      }
+    }
+  }
+}

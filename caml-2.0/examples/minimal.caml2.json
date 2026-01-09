@@ -1,0 +1,194 @@
+{
+  "caml_version": "2.0",
+  "meta": {
+    "id": "EXAMPLE_CAML2_MINIMAL",
+    "title": "CAML 2.0 Minimal Example",
+    "created_utc": "2026-01-08T18:00:00Z",
+    "authors": [
+      "David R. Koepsell"
+    ]
+  },
+  "world": {
+    "entities": {
+      "characters": [
+        {
+          "id": "PC_Alaric",
+          "kind": "character",
+          "name": "Alaric",
+          "pc": true,
+          "species": "Human"
+        },
+        {
+          "id": "NPC_Marshal",
+          "kind": "character",
+          "name": "Marshal Vex",
+          "pc": false,
+          "species": "Human"
+        }
+      ],
+      "locations": [
+        {
+          "id": "LOC_Archives",
+          "kind": "location",
+          "name": "City Archives",
+          "region": "Umberwatch"
+        },
+        {
+          "id": "LOC_Clocktower",
+          "kind": "location",
+          "name": "Old Clocktower",
+          "region": "Umberwatch"
+        }
+      ],
+      "items": [
+        {
+          "id": "ITEM_SealedLetter",
+          "kind": "item",
+          "name": "Sealed Letter",
+          "rarity": "common"
+        }
+      ],
+      "factions": [
+        {
+          "id": "FAC_IronCouncil",
+          "kind": "faction",
+          "name": "Iron Council",
+          "alignment": "lawful"
+        }
+      ]
+    },
+    "connections": [
+      {
+        "id": "CONN_1",
+        "from": "LOC_Archives",
+        "to": "LOC_Clocktower",
+        "mode": "road",
+        "bidirectional": true
+      }
+    ]
+  },
+  "state": {
+    "facts": [
+      {
+        "id": "STATE_Alaric_HP",
+        "bearer": "PC_Alaric",
+        "type": "hp",
+        "value": 38,
+        "units": "hp"
+      },
+      {
+        "id": "STATE_Marshal_Allegiance",
+        "bearer": "NPC_Marshal",
+        "type": "allegiance",
+        "value": "FAC_IronCouncil"
+      }
+    ]
+  },
+  "roles": {
+    "assignments": [
+      {
+        "id": "ROLE_Marshal_Governor",
+        "role": "CityGovernor",
+        "holder": "NPC_Marshal",
+        "revocation": {
+          "any": [
+            {
+              "lhs": "state[STATE_Marshal_Allegiance].value",
+              "op": "!=",
+              "rhs": "FAC_IronCouncil"
+            }
+          ]
+        },
+        "notes": "Governor by appointment of the Iron Council."
+      }
+    ]
+  },
+  "processes": {
+    "catalog": [
+      {
+        "id": "PROC_Investigation_1",
+        "type": "investigation",
+        "timebox": {
+          "id": "TB_1",
+          "start_utc": "2026-01-08T18:00:00Z",
+          "end_utc": "2026-01-08T19:00:00Z",
+          "label": "Hour 1"
+        },
+        "participants": [
+          "PC_Alaric"
+        ],
+        "location": "LOC_Archives",
+        "inputs": [
+          {
+            "actor": "PC_Alaric",
+            "declared_action": "Investigate",
+            "target": "LOC_Archives",
+            "method": "Careful"
+          }
+        ],
+        "outcomes": [
+          "Alaric finds references to a sealed letter in the registry."
+        ],
+        "notes": "Simple example process instance."
+      }
+    ]
+  },
+  "transitions": {
+    "changes": [
+      {
+        "id": "TR_1",
+        "caused_by": "PROC_Investigation_1",
+        "ops": [
+          {
+            "op": "add_state",
+            "fact": {
+              "id": "STATE_Found_LetterLead",
+              "bearer": "PC_Alaric",
+              "type": "clue",
+              "value": "Registry points to a sealed letter stored offsite.",
+              "provenance": {
+                "source_process": "PROC_Investigation_1"
+              }
+            }
+          }
+        ],
+        "notes": "Investigation yields a new clue state."
+      }
+    ]
+  },
+  "snapshots": {
+    "timeline": [
+      {
+        "id": "SNAP_0",
+        "time_utc": "2026-01-08T18:00:00Z",
+        "world_hash": "placeholder",
+        "state_hash": "placeholder",
+        "roles_hash": "placeholder",
+        "narration": "Campaign begins.",
+        "derived_from_transition": "TR_1"
+      }
+    ]
+  },
+  "correspondence": {
+    "cadence": "ad_hoc",
+    "default_timebox_hours": 24,
+    "turns": [
+      {
+        "id": "TURN_1",
+        "timebox": {
+          "id": "TB_TURN_1",
+          "start_utc": "2026-01-08T18:00:00Z",
+          "end_utc": "2026-01-09T18:00:00Z",
+          "label": "Turn 1"
+        },
+        "submissions": [
+          {
+            "actor": "PC_Alaric",
+            "declared_action": "Investigate",
+            "target": "LOC_Archives"
+          }
+        ]
+      }
+    ]
+  }
+}

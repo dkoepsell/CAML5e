@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/roles_assignments.schema.json",
+  "title": "CAML 2.0 Role Assignments",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "$ref": "./defs.schema.json#/$defs/id"
+    },
+    "ref": {
+      "$ref": "./defs.schema.json#/$defs/ref"
+    },
+    "role_assignment": {
+      "type": "object",
+      "required": [
+        "id",
+        "role",
+        "holder"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "role": {
+          "type": "string",
+          "minLength": 1
+        },
+        "holder": {
+          "$ref": "#/$defs/ref"
+        },
+        "conditions": {
+          "$ref": "./defs.schema.json#/$defs/condition_set"
+        },
+        "revocation": {
+          "$ref": "./defs.schema.json#/$defs/condition_set"
+        },
+        "granted_by_process": {
+          "$ref": "#/$defs/ref"
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

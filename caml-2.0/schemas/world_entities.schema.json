@@ -1,0 +1,160 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.org/caml2/schemas/world_entities.schema.json",
+  "title": "CAML 2.0 World Entity Types",
+  "type": "object",
+  "$defs": {
+    "id": {
+      "$ref": "./defs.schema.json#/$defs/id"
+    },
+    "ref": {
+      "$ref": "./defs.schema.json#/$defs/ref"
+    },
+    "base_entity": {
+      "type": "object",
+      "required": [
+        "id",
+        "kind",
+        "name"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "character": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_entity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "character"
+            },
+            "pc": {
+              "type": "boolean",
+              "default": false
+            },
+            "species": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "location": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_entity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "location"
+            },
+            "region": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "item": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_entity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "item"
+            },
+            "rarity": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "faction": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/base_entity"
+        },
+        {
+          "type": "object",
+          "properties": {
+            "kind": {
+              "const": "faction"
+            },
+            "alignment": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    },
+    "connection": {
+      "type": "object",
+      "required": [
+        "id",
+        "from",
+        "to",
+        "mode"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "from": {
+          "$ref": "#/$defs/ref"
+        },
+        "to": {
+          "$ref": "#/$defs/ref"
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "road",
+            "door",
+            "portal",
+            "sea",
+            "air",
+            "tunnel",
+            "other"
+          ]
+        },
+        "bidirectional": {
+          "type": "boolean",
+          "default": true
+        },
+        "conditions": {
+          "$ref": "./defs.schema.json#/$defs/condition_set"
+        }
+      }
+    }
+  }
+}
