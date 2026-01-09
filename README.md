@@ -1,89 +1,150 @@
-# CAML-5e: Canonical Adventure Markup Language (Core + D&D 5e Layer)
+# CAML5e  
+**Canonical Adventure Markup Language for D&D 5e**
 
-This repository drop-in provides:
+CAML (Canonical Adventure Markup Language) is a structured format for authoring, running, and analyzing tabletop role-playing game adventures, with an initial focus on Dungeons & Dragons 5e.
 
-- **CAML Core**: system-agnostic adventure/archive schema
-- **CAML-5e**: D&D 5e mechanics layer (structured, exportable)
-- **BFO-aligned OWL skeleton** (Turtle)
-- **PlantUML architecture diagram**
-- **Example adventure pack** (minimal but complete)
-- **Foundry VTT export mapping spec** (field-level mapping)
-- **Validation + indexing script** (YAML -> JSON index, basic schema checks)
+This repository supports **two generations of CAML**:
 
-## What this is (and is not)
+- **CAML 1.x** – the original, human-friendly schema used for practical 5e adventure design  
+- **CAML 2.0** – a second-generation, ontologically grounded refactor designed for explicit game state, correspondence play, and tooling
 
-CAML models an adventure as a **structured possibility space**:
-- Locations, NPCs, items, encounters
-- Conditions (gates) and outcomes (state changes)
-- Modular components you can reuse and version
-
-CAML-5e adds a **rules layer** for 5e mechanics:
-- Ability scores, skills, saves, actions
-- Spells, conditions, damage
-- Resources and rest events
-
-### Licensing boundary
-
-This repo contains **schemas and structures**. It does **not** include non-SRD Wizards text.
-If you want to bundle SRD-derived spell/monster lists, add them as separate packs under `packs/`
-with proper **CC BY 4.0** attribution.
-
-## Folder layout
-
-- `schemas/` JSON Schemas
-- `ontology/` OWL (Turtle) skeleton, BFO-aligned
-- `puml/` PlantUML diagrams
-- `examples/` A minimal working adventure archive (YAML)
-- `exports/` Export mapping specs (start with Foundry)
-- `scripts/` Utility scripts (index/validate)
-
-## Quick start
-
-1) Install Python deps (optional): `pip install pyyaml jsonschema`
-2) Build an index for an adventure:
-```bash
-python scripts/build_index.py examples/adventure-minimal
-```
-3) Validate key files (best-effort):
-```bash
-python scripts/validate.py examples/adventure-minimal
-```
-
-## IDs
-
-CAML uses stable identifiers like:
-- `location.ruined_tower`
-- `npc.bandit_captain`
-- `encounter.night_ambush`
-
-These are intended to be durable across versions for diffs and references.
-
-## Authoring notes
-
-- Keep prose in `description` fields and journals/handouts.
-- Keep mechanics in the `ruleset: dnd5e` layer.
-- Keep branching in `gates` and `outcomes` (state transitions).
+CAML does **not** replace D&D rules.  
+It structures adventures, not mechanics.
 
 ---
 
-Generated on 2026-01-04.
+## Repository Structure
 
-## Graph visualizer (encounter + gate graph)
-
-1) Build a graph for an adventure:
-```bash
-python scripts/build_graph.py examples/adventure-dungeon-srd
 ```
-2) Open the viewer:
-- `viewer/graph.html`
-- default path points at `examples/adventure-dungeon-srd/graph.json`
-
-## Procedural remix tool
-
-Safely recombines CAML components into a new pack while making encounter gates satisfiable.
-
-Example:
-```bash
-python scripts/remix.py --out examples/remix-output --seed 123 --pick 2 examples/adventure-minimal examples/adventure-dungeon-srd
-python scripts/build_graph.py examples/remix-output
+CAML5e/
+├─ caml-1.x/              # Legacy CAML (stable, unchanged)
+├─ caml-2.0/              # CAML 2.0 (explicit, ontologically grounded)
+│  ├─ schemas/
+│  ├─ specs/
+│  ├─ examples/
+│  └─ README.md
+│
+├─ schemas/               # CAML 1.x schemas
+├─ ontology/              # Ontology and BFO-related work (CAML 1.x era)
+├─ examples/              # CAML 1.x examples
+├─ exports/               # Export and transformation formats
+├─ scripts/               # Utilities and helpers
+├─ viewer/                # Visualization tools
+├─ tools/validator-stub/  # Placeholder for CAML 2.0 validation tooling
+├─ docs/                  # Design notes and version comparisons
+│
+├─ DM_QUICKSTART.md
+├─ CAML Tech Spec.pdf
+└─ README.md
 ```
+
+---
+
+## CAML 1.x (Legacy, Stable)
+
+**CAML 1.x** is the original format developed for:
+
+- practical DM use
+- D&D 5e adventure modules
+- structured but flexible worldbuilding
+- notebook-style campaign management
+
+It mixes entities, state, and events in a way that is easy for humans to read and write, and it remains fully supported.
+
+If you are:
+- writing a standard 5e adventure
+- using CAML as enhanced DM notes
+- not concerned with formal state tracking
+
+→ **Use CAML 1.x**
+
+---
+
+## CAML 2.0 (Experimental, Structured)
+
+**CAML 2.0** is a refactor of CAML that makes game state **explicit, auditable, and replayable**.
+
+It introduces:
+
+- explicit separation of:
+  - world structure (entities)
+  - dependent state (facts)
+  - roles (revocable authority and position)
+  - processes (events in time)
+  - transitions (the only source of persistent change)
+  - snapshots (time-indexed world states)
+- formal invariants grounded in a minimal BFO-aligned ontology
+- first-class support for correspondence (asynchronous) adventures
+- traceability and post-hoc analysis
+- a foundation for tooling, validation, and AI assistance
+
+CAML 2.0 is **additive** and **non-breaking**.  
+It does not alter any D&D 5e mechanics.
+
+If you are:
+- running long-form or asynchronous campaigns
+- collaborating across multiple DMs
+- building tools, validators, or simulations
+- interested in formal game-state semantics
+
+→ **Use CAML 2.0**
+
+See `caml-2.0/README.md` for full details.
+
+---
+
+## Relationship Between CAML 1.x and 2.0
+
+- CAML 1.x remains stable and supported
+- CAML 2.0 lives in its own versioned directory
+- No files are overwritten
+- Migration from 1.x to 2.0 is possible but optional
+- Both formats can coexist in the same campaign ecosystem
+
+CAML 2.0 should be understood as **infrastructure**, not a replacement.
+
+---
+
+## Correspondence (Asynchronous) Play
+
+CAML 2.0 explicitly supports correspondence-style adventures (analogous to correspondence chess), where:
+
+- players submit structured actions asynchronously
+- time is explicit
+- conflicts are arbitrated deterministically
+- world state can be paused, resumed, and audited
+
+This is not reliably achievable with narrative-only formats.
+
+---
+
+## Status
+
+- CAML 1.x: **Stable**
+- CAML 2.0: **Draft (structurally complete, subject to iteration)**
+- Validator tooling: **Planned**
+- Migration tooling: **Planned**
+
+---
+
+## License
+
+See `LICENSE`.
+
+---
+
+## Citation
+
+If you use CAML in academic, educational, or published work, please see `CITATION.cff`.
+
+---
+
+## Philosophy (Brief)
+
+CAML treats an adventure not as a script, but as a **stateful system that produces stories through play**.
+
+CAML 2.0 makes that system explicit.
+
+---
+
+For questions, discussion, or contributions, open an issue or pull request.
