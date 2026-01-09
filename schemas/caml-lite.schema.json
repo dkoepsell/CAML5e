@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://caml.dev/schema/caml-core.schema.json",
-  "title": "CAML Core Schema",
+  "$id": "https://caml.dev/schema/caml-lite.schema.json",
+  "title": "CAML Lite Schema",
   "type": "object",
   "required": [
     "id",
@@ -18,17 +18,8 @@
     "name": {
       "type": "string"
     },
-    "locations": {
-      "type": "array"
-    },
-    "npcs": {
-      "type": "array"
-    },
-    "encounters": {
-      "type": "array"
-    },
-    "items": {
-      "type": "array"
+    "description": {
+      "type": "string"
     }
   },
   "additionalProperties": true
